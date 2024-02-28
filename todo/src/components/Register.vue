@@ -7,16 +7,15 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input v-model="password" type="password" class="form-control" id="exampleInputPassword1"
-                placeholder="Password">
+            <input v-model="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { loginUser } from '../utils/userData'; // importiere die Funktion loginUser aus userData.js
+import { saveUserData, checkUserExists } from '../utils/userData';
 import { useRouter } from 'vue-router';
 
 const email = ref('');
@@ -29,14 +28,14 @@ const submitForm = () => {
         password: password.value
     };
 
-    const loggedInUser = loginUser(userData);
-
-    if (loggedInUser) {
-        // Benutzer erfolgreich angemeldet, weiterleitung zur Home-Seite
-        router.push('/home');
+    if (checkUserExists(userData.email)) {
+        // E-Mail bereits vergeben, zeige eine entsprechende Fehlermeldung an
+        console.log('E-Mail bereits vergeben');
     } else {
-        // Anmelde fehlgeschlagen, zeige eine entsprechende Fehlermeldung an
-        console.log('Login failed');
+        // E-Mail ist noch nicht vergeben, neuen Benutzer registrieren
+        saveUserData(userData);
+        // Weiterleitung zur Home-Seite nach erfolgreicher Registrierung
+        router.push('/home');
     }
 };
 </script>
