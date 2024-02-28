@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "vue.vscode-typescript-vue-plugin",
+    "hollowtree.vue-snippets",
+    "sdras.vue-vscode-snippets",
+    "shenjiaolong.vue-helper",
+    "sdras.vue-vscode-extensionpack"
+  ]
+}
