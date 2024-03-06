@@ -2,7 +2,7 @@
     "extensions.closeExtensionDetailsOnViewChange": true,
     "task.allowAutomaticTasks": "on",
     "cSpell.language": "en, de-de",
-    "files.autoSave": "onFocusChange",
+    "files.autoSave": "afterDelay",
     "workbench.iconTheme":  "vscode-icons",
     "vsicons.dontShowNewVersionMessage":true,
     "editor.minimap.enabled": false
