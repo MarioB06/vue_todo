@@ -41,7 +41,7 @@ export default {
     </div>
     <div class="container">
       <div class="col-8">
-        <input type="text" v-model="newCategoryName" placeholder="Kategoriename" class="container">
+        <input type="text" v-model="newCategoryName" placeholder="Kategoriename" class="container" @keyup.enter="addCategory(newCategoryName)">
         <button @click="addCategory(newCategoryName)" id="input">+ Kategorie hinzufügen</button>
       </div>
     </div>

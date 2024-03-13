@@ -1,5 +1,19 @@
 <script>
-
+export default {
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+  },
+  computed: {
+    categoryName() {
+      // Hier kann man die Kategorie anhand der ID aus dem LocalStorag abrufen
+      return 'Kategorie ' + this.id;
+    },
+  },
+  
+};
 
 
 </script>

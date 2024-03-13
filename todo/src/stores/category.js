@@ -26,7 +26,7 @@ export const useCategoryStore = defineStore('category', {
 
   },
 
-  // Save in browser localStorage, that simple with pinia-plugin-persistedstate :-)
+ 
   persist: true,
 
 })
