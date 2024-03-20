@@ -1,28 +1,56 @@
 <script>
 export default {
-  props: {
-    id: {
-      type: Number,
-      required: true,
-    },
+  data() {
+    return {
+      todo: [],
+      newTask: "",
+      showOpenTasks: true,
+      showDoneTasks: true,
+    };
+  },
+  mounted() {
+    this.todo = JSON.parse(localStorage.getItem("todo")) || [];
   },
   computed: {
-    categoryName() {
-      // Hier kann man die Kategorie anhand der ID aus dem LocalStorag abrufen
-      return 'Kategorie ' + this.id;
+    openTodo() {
+      return this.todo.filter((todo) => !todo.status);
+    },
+    doneTodo() {
+      return this.todo.filter((todo) => todo.status);
     },
   },
-  
+  methods: {
+    saveTodo() {
+      localStorage.setItem("todo", JSON.stringify(this.todo));
+    },
+    addTask() {
+      const taskText = this.newTask.trim();
+      if (taskText !== "") {
+        this.todo.push({
+          id: Date.now(),
+          description: taskText,
+          status: false,
+        });
+        this.saveTodo();
+        this.newTask = "";
+      }
+    },
+    toggleOpenTasks() {
+      this.showOpenTasks = !this.showOpenTasks;
+    },
+    toggleDoneTasks() {
+      this.showDoneTasks = !this.showDoneTasks;
+    },
+  },
 };
-
-
 </script>
+
 
 <template>
   <div>
     <div class="title">
       <h1>TO DO</h1>
-      <h2>{{ category }}</h2>
+      <!-- <h2>{{ category }}</h2> -->
     </div>
 
     <div class="searchbar">
@@ -32,9 +60,22 @@ export default {
     <div class="tasks">
       <div class="open-task-box">
         <p>Offen</p>
+      </button>
+
+      <div class="tasks" v-if="showOpenTasks">
+        <div v-for="todo in openTodo" :key="todo.id" class="open-task-box">
+          <p>{{ todo.description }}</p>
+        </div>
       </div>
-      <div class="done-task-box">
+      
+      <button class="done-task-box" @click="toggleDoneTasks">
         <p>Erledigt</p>
+      </button>
+
+      <div class="tasks" v-if="showDoneTasks">
+        <div v-for="todo in doneTodo" :key="todo.id" class="done-task-box">
+          <p>{{ todo.description }}</p>
+        </div>
       </div>
     </div>
 

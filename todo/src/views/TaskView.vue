@@ -5,7 +5,8 @@ import Task from '@/components/Task.vue';
 <template>
   <div>
     <h1>Tasks for Category  {{ categoryId }}</h1>
-    <!-- Hier kannst du die Aufgaben anzeigen -->
+
+    <Task/>
   </div>
 </template>
 
