@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Task from '@/components/Task.vue'; // Importiere die Task-Komponente
 import HomeView from '@/views/HomeView.vue';
 import TaskView from '@/views/TaskView.vue';
 

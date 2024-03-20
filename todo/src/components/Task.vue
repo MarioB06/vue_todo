@@ -4,31 +4,70 @@ export default {
     return {
       todo: [],
       newTask: "",
+      categoryId: null,
       showOpenTasks: true,
       showDoneTasks: true,
+      searchQuery: "", // Neues Datenattribut für die Suchanfrage
     };
   },
   mounted() {
     this.todo = JSON.parse(localStorage.getItem("todo")) || [];
+    if (this.$route.params.id) {
+      this.categoryId = parseInt(this.$route.params.id);
+      const category = this.getCategoryNameById(this.categoryId);
+      this.category = category ? category.name : "Unbekannte Kategorie";
+    }
   },
   computed: {
     openTodo() {
-      return this.todo.filter((todo) => !todo.status);
+      return this.todo.filter(
+        (todo) => !todo.status && todo.categoryId === this.categoryId
+      );
     },
     doneTodo() {
-      return this.todo.filter((todo) => todo.status);
+      return this.todo.filter(
+        (todo) => todo.status && todo.categoryId === this.categoryId
+      );
+    },
+    // Filtern der offenen Aufgaben basierend auf der Suchabfrage
+    filteredOpenTodo() {
+      return this.openTodo.filter((todo) =>
+        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+    // Filtern der erledigten Aufgaben basierend auf der Suchabfrage
+    filteredDoneTodo() {
+      return this.doneTodo.filter((todo) =>
+        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
   },
   methods: {
+    getCategoryNameById(id) {
+      const categories = JSON.parse(localStorage.getItem("categories")) || [];
+      return categories.find((category) => category.id === id);
+    },
+    markAsDone(id) {
+      const index = this.todo.findIndex((todo) => todo.id === id);
+      if (index !== -1) {
+        this.todo[index].status = true;
+        this.saveTodo();
+      }
+    },
     saveTodo() {
       localStorage.setItem("todo", JSON.stringify(this.todo));
     },
     addTask() {
       const taskText = this.newTask.trim();
       if (taskText !== "") {
+        if (!this.categoryId) {
+          alert("Kategorie-ID nicht gefunden.");
+          return;
+        }
         this.todo.push({
           id: Date.now(),
           description: taskText,
+          categoryId: this.categoryId,
           status: false,
         });
         this.saveTodo();
@@ -47,29 +86,51 @@ export default {
 
 
 <template>
-  <div>
+  <div class="body">
     <div class="title">
       <h1>TO DO</h1>
-      <!-- <h2>{{ category }}</h2> -->
+      <h2>{{ category }}</h2>
     </div>
 
     <div class="searchbar">
-      <input type="text" placeholder="Suche nach Aufgaben" />
+      <input class="search-input" type="text" placeholder="Suche nach Aufgaben" v-model="searchQuery" />
     </div>
 
+    <br />
+    <br />
+
     <div class="tasks">
-      <button class="open-task-box" @click="toggleOpenTasks">
-        <p>Offen</p>
+      <button class="open-task-box" @click="toggleOpenTasks" style="width: 20%">
+        <p>
+          Offen
+          <span class="arrow-icon" v-if="showOpenTasks" @click="toggleOpenTasks"
+            >▼</span
+          >
+          <span class="arrow-icon" v-else @click="toggleOpenTasks">▲</span>
+        </p>
       </button>
 
       <div class="tasks" v-if="showOpenTasks">
         <div v-for="todo in openTodo" :key="todo.id" class="open-task-box">
+          <span class="mark-done-icon" @click="markAsDone(todo.id)">
+            <span class="circle" v-if="!todo.status"></span>
+            <span class="checkmark" v-else></span>
+          </span>
           <p>{{ todo.description }}</p>
         </div>
       </div>
-      
-      <button class="done-task-box" @click="toggleDoneTasks">
-        <p>Erledigt</p>
+
+      <br />
+      <br />
+
+      <button class="done-task-box" @click="toggleDoneTasks" style="width: 20%">
+        <p>
+          Erledigt
+          <span class="arrow-icon" v-if="showDoneTasks" @click="toggleDoneTasks"
+            >▼</span
+          >
+          <span class="arrow-icon" v-else @click="toggleDoneTasks">▲</span>
+        </p>
       </button>
 
       <div class="tasks" v-if="showDoneTasks">
@@ -93,22 +154,66 @@ export default {
 
 
 <style scoped>
-/* Alle anderen Stile bleiben gleich */
+.search-input {
+  background-color: #3e3e3e;
+}
+.arrow-icon {
+  margin-left: 5px;
+  background-color: #3e3e3e;
+}
+
+.arrow-rotated {
+  transform: rotate(180deg);
+}
+.mark-done-icon {
+  cursor: pointer;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  background-color: #3e3e3e;
+}
+
+.circle,
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3e3e3e;
+}
+
+.circle {
+  border: 2px solid #ccc;
+  border-radius: 50%;
+}
+
+.checkmark {
+  display: none;
+}
+
+.mark-done-icon:hover .circle {
+  background-color: #7062d5;
+}
+
+.mark-done-icon:hover .checkmark {
+  display: block;
+}
 
 .add-task-bar {
   position: fixed;
-  bottom: 0; /* Am unteren Rand positionieren */
+  bottom: 0;
   left: 0;
   width: 100%;
   background-color: #3e3e3e;
   padding: 10px;
   box-sizing: border-box;
   border-radius: 10px;
-  /* Inkludiert Padding und Border in die Breite */
 }
 
 .add-task-input {
-  width: calc(100% - 20px);
+  width: calc(100% - 50px);
   height: 100%;
   border: none;
   background-color: #3e3e3e;
@@ -143,8 +248,8 @@ export default {
 
 
 .done-task-box {
-  width: 200px;
-  height: 40px;
+  width: 100%;
+  height: 50px;
   border-radius: 10px;
   border: 2px solid #3e3e3e;
   padding: 10px;
@@ -152,7 +257,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
 }
 
 
