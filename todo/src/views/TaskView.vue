@@ -4,7 +4,6 @@ import Task from '@/components/Task.vue';
 
 <template>
   <div>
-    <h1>Tasks for Category  {{ category.name }}</h1>
 
     <Task/>
   </div>
@@ -14,10 +13,10 @@ import Task from '@/components/Task.vue';
 export default {
   computed: {
     categoryId() {
-      
+      // Extrahiere die Kategorie-ID aus der URL
       return this.$route.params.id;
     }
   },
-  
+  // Füge hier die Logik hinzu, um die Aufgaben für diese Kategorie zu laden
 }
 </script>
