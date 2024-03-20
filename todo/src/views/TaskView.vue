@@ -4,7 +4,7 @@ import Task from '@/components/Task.vue';
 
 <template>
   <div>
-    <h1>Tasks for Category  {{ categoryId }}</h1>
+    <h1>Tasks for Category  {{ category.name }}</h1>
 
     <Task/>
   </div>

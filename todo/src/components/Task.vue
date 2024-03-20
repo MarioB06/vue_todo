@@ -54,11 +54,11 @@ export default {
     </div>
 
     <div class="searchbar">
-      <input type="text" placeholder="Suche nach Aufgaben">
+      <input type="text" placeholder="Suche nach Aufgaben" />
     </div>
 
     <div class="tasks">
-      <div class="open-task-box">
+      <button class="open-task-box" @click="toggleOpenTasks">
         <p>Offen</p>
       </button>
 
@@ -80,9 +80,14 @@ export default {
     </div>
 
     <div class="add-task-bar">
-      <input type="text" placeholder="Neue Aufgabe hinzufügen" class="add-task-input">
+      <input
+        type="text"
+        placeholder="Neue Aufgabe hinzufügen"
+        class="add-task-input"
+        v-model="newTask"
+        @keyup.enter="addTask"
+      />
     </div>
-
   </div>
 </template>
 
@@ -97,7 +102,7 @@ export default {
   width: 100%;
   background-color: #3e3e3e;
   padding: 10px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   border-radius: 10px;
   /* Inkludiert Padding und Border in die Breite */
 }

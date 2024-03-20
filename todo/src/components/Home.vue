@@ -12,25 +12,25 @@ export default {
   },
 
   computed: {
-    ...mapState(useCategoryStore, ['category']),
+    ...mapState(useCategoryStore, ['category']), // Hier sollte 'category' statt 'categories' sein
   },
 
   methods: {
     ...mapActions(useCategoryStore, ['addCategory']),
-  },
-
-  props: {
-    id: {
-      type: Number,
-      required: true
+    addNewCategory() {
+      if (this.newCategoryName.trim() === '') return;
+      this.addCategory(this.newCategoryName);
+      this.saveCategoriesToLocalStorage();
+      this.newCategoryName = ''; // Clear the input field after adding the category
     },
-    name: {
-      type: String,
-      required: true
+    saveCategoriesToLocalStorage() {
+      localStorage.setItem('categories', JSON.stringify(this.category)); // Hier sollte 'category' statt 'categories' sein
     },
   }
 }
 </script>
+
+
 
 <template>
   <div class="home">
@@ -42,15 +42,16 @@ export default {
    
     <div>
       <div class="category-container">
-      <!-- Verwende router-link für jede Kategorie -->
-      <router-link :to="'/task/' + category.id" v-for="category in category" :key="category.id" class="category-box">
-        {{ category.name }}
-      </router-link>
-    </div>
-    </div>
-    <div class="add-category-bar">
-        <input type="text" v-model="newCategoryName" placeholder="+ Kategorie hinzufügen" class="add-category-input" @keyup.enter="addCategory(newCategoryName)">
+        <!-- Verwende router-link für jede Kategorie -->
+        <router-link :to="'/task/' + category.id" v-for="category in category" :key="category.id" class="category-box">
+          {{ category.name }}
+        </router-link>
       </div>
+    </div>
+    
+    <div class="add-category-bar">
+      <input type="text" v-model="newCategoryName" placeholder="+ Kategorie hinzufügen" class="add-category-input" @keyup.enter="addNewCategory">
+    </div>
   </div>
 </template>
 
@@ -59,14 +60,13 @@ export default {
 <style scoped>
 .add-category-bar {
   position: fixed;
-  bottom: 0; /* Am unteren Rand positionieren */
+  bottom: 0;
   left: 0;
   width: 100%;
   background-color: #3e3e3e;
   padding: 10px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   border-radius: 10px;
-  /* Inkludiert Padding und Border in die Breite */
 }
 
 .add-category-input {
@@ -78,13 +78,13 @@ export default {
   padding-left: 10px;
   border-radius: 10px;
 }
+
 .title {
   font-size: 100%;
 }
 
 .container {
   background-color: #3e3e3e;
-  /* Grauer Hintergrund */
   padding: 10px;
   border-radius: 5px;
   width: 80%;
@@ -96,7 +96,6 @@ export default {
   font-size: 16px;
   padding: 8px 0;
   color: #7062d5;
-  /* Lila Schriftfarbe */
   background-color: #3e3e3e;
   font-weight: bolder;
 }
@@ -110,10 +109,9 @@ export default {
   background-color: #3e3e3e;
   color: white;
   padding: 5px;
-  margin-bottom: 5px; /* Abstand zwischen den Kategorien */
+  margin-bottom: 5px;
   border-radius: 5px;
-  max-width: 200px; /* Maximalbreite der Kategorien */
-  flex-grow: 0; /* Verhindert das Strecken der Kategorien bis ganz nach rechts */
+  max-width: 200px;
+  flex-grow: 0;
 }
-
 </style>
