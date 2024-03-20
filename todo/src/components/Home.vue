@@ -39,23 +39,45 @@ export default {
         <h1>To Do</h1>
       </center>
     </div>
-    <div class="container">
-      <div class="col-8">
-        <input type="text" v-model="newCategoryName" placeholder="Kategoriename" class="container" @keyup.enter="addCategory(newCategoryName)">
-        <button @click="addCategory(newCategoryName)" id="input">+ Kategorie hinzufügen</button>
-      </div>
-    </div>
-    <div class="category-container">
-      <div v-for="(category, index) in category" :key="index" class="category-box">
+   
+    <div>
+      <div class="category-container">
+      <!-- Verwende router-link für jede Kategorie -->
+      <router-link :to="'/task/' + category.id" v-for="category in category" :key="category.id" class="category-box">
         {{ category.name }}
-      </div>
+      </router-link>
     </div>
+    </div>
+    <div class="add-category-bar">
+        <input type="text" v-model="newCategoryName" placeholder="+ Kategorie hinzufügen" class="add-category-input" @keyup.enter="addCategory(newCategoryName)">
+      </div>
   </div>
 </template>
 
 
 
 <style scoped>
+.add-category-bar {
+  position: fixed;
+  bottom: 0; /* Am unteren Rand positionieren */
+  left: 0;
+  width: 100%;
+  background-color: #3e3e3e;
+  padding: 10px;
+  box-sizing: border-box; 
+  border-radius: 10px;
+  /* Inkludiert Padding und Border in die Breite */
+}
+
+.add-category-input {
+  width: calc(100% - 20px);
+  height: 100%;
+  border: none;
+  background-color: #3e3e3e;
+  color: #7062d5;
+  padding-left: 10px;
+  border-radius: 10px;
+}
 .title {
   font-size: 100%;
 }

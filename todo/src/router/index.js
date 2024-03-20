@@ -14,16 +14,12 @@ const routes = [
     redirect: '/'
   },
   {
-    path: '/task',
+    path: '/task/:id',
     name: 'task',
-    component: TaskView
-  },
-  {
-    path: '/category/:id',
-    name: 'category-tasks',
     component: TaskView,
-    props: true
-  }
+    props:true 
+  },
+
 ];
 
 const router = createRouter({
