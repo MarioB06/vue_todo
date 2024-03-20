@@ -1,6 +1,5 @@
 <script>
-import { mapState, mapActions } from 'pinia'
-import { useCategoryStore } from '@/stores/category'
+import { useCategoryStore } from '@/stores/category';
 
 export default {
   name: 'CategoryList',
@@ -12,19 +11,20 @@ export default {
   },
 
   computed: {
-    ...mapState(useCategoryStore, ['category']), // Hier sollte 'category' statt 'categories' sein
+    category() {
+      return useCategoryStore().category; // Zugriff auf die Kategorie-Store-Eigenschaft
+    }
   },
 
   methods: {
-    ...mapActions(useCategoryStore, ['addCategory']),
     addNewCategory() {
       if (this.newCategoryName.trim() === '') return;
-      this.addCategory(this.newCategoryName);
+      useCategoryStore().addCategory(this.newCategoryName); // Verwendung der Aktion des Kategorie-Stores
       this.saveCategoriesToLocalStorage();
       this.newCategoryName = ''; // Clear the input field after adding the category
     },
     saveCategoriesToLocalStorage() {
-      localStorage.setItem('categories', JSON.stringify(this.category)); // Hier sollte 'category' statt 'categories' sein
+      localStorage.setItem('categories', JSON.stringify(this.category));
     },
   }
 }
@@ -32,86 +32,105 @@ export default {
 
 
 
+
 <template>
+  
   <div class="home">
-    <div class="title">
-      <center>
-        <h1>To Do</h1>
-      </center>
-    </div>
-   
-    <div>
+    
+    <div class="category-sidebar">
       <div class="category-container">
-        <!-- Verwende router-link für jede Kategorie -->
+        
+        <h2 class="category-title">Deine Kategorien</h2>
         <router-link :to="'/task/' + category.id" v-for="category in category" :key="category.id" class="category-box">
           {{ category.name }}
         </router-link>
       </div>
     </div>
-    
+    <div class="title">
+      <h2>Willkommen bei Deiner ToDo-Liste!</h2>
+        <p>Organisiere dein Leben, erledige Aufgaben und bleibe produktiv.</p>
+         <p>Fange jetzt an, deine Aufgaben zu verwalten und dein Leben zu organisieren.</p>
+    </div>
+
     <div class="add-category-bar">
       <input type="text" v-model="newCategoryName" placeholder="+ Kategorie hinzufügen" class="add-category-input" @keyup.enter="addNewCategory">
     </div>
   </div>
 </template>
 
-
-
 <style scoped>
-.add-category-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #3e3e3e;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px;
+.title{
+  margin-left: 100px;
+  text-align: center;
+  padding: 30px; /* Innenabstand */
+  border-radius: 10px; /* Abrundung der Ecken */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schatten */
+  max-width: 600px; /* Maximale Breite */
+  margin: 50px auto; /* Zentrierte Ausrichtung */
+}
+.home {
+  display: flex;
+  height: 100vh;
 }
 
-.add-category-input {
-  width: calc(100% - 20px);
-  height: 100%;
-  border: none;
-  background-color: #3e3e3e;
-  color: #7062d5;
-  padding-left: 10px;
-  border-radius: 10px;
-}
-
-.title {
-  font-size: 100%;
-}
-
-.container {
-  background-color: #3e3e3e;
+.category-sidebar {
+  background-color: rgb(136, 134, 134);
   padding: 10px;
   border-radius: 5px;
-  width: 80%;
-}
-
-#input {
-  border: none;
-  width: 100%;
-  font-size: 16px;
-  padding: 8px 0;
-  color: #7062d5;
-  background-color: #3e3e3e;
-  font-weight: bolder;
+  width: 250px;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .category-container {
   display: flex;
   flex-direction: column;
+  background-color: rgb(136, 134, 134);
 }
 
 .category-box {
   background-color: #3e3e3e;
   color: white;
-  padding: 5px;
+  padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
-  max-width: 200px;
-  flex-grow: 0;
+  text-decoration: none;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+.add-category-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 260px;
+  width: calc(100% - 40px);
+  background-color: #3e3e3e;
+  border-radius: 10%;
+
+}
+
+.add-category-input {
+  width: 100%;
+  height: 40px;
+  border: none;
+  background-color: #3e3e3e;
+  color: #7062d5;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.add-category-input:focus {
+  outline: none;
+}
+
+.category-title {
+  margin-top: 0;
+  color: #333; 
+  background-color: rgb(136, 134, 134);
 }
 </style>

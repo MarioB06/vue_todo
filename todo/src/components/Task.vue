@@ -141,7 +141,7 @@ export default {
   flex-direction: column;
 }
 
-.open-task-box,
+
 .done-task-box {
   width: 200px;
   height: 40px;
@@ -155,10 +155,5 @@ export default {
   margin-bottom: 10px;
 }
 
-p {
-  background-color: #3e3e3e;
-  color: #7062d5;
-  margin: 0;
-  padding-left: 10px;
-}
+
 </style>
