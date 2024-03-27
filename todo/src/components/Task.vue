@@ -7,6 +7,7 @@ export default {
       categoryId: null,
       showOpenTasks: true,
       showDoneTasks: true,
+      searchQuery: "", // Hier wird der Suchbegriff gespeichert
     };
   },
   mounted() {
@@ -18,6 +19,18 @@ export default {
     }
   },
   computed: {
+    // Hinzufügen einer neuen berechneten Eigenschaft für die gefilterten offenen Aufgaben
+    filteredOpenTodo() {
+      return this.openTodo.filter((todo) =>
+        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+    // Hinzufügen einer neuen berechneten Eigenschaft für die gefilterten erledigten Aufgaben
+    filteredDoneTodo() {
+      return this.doneTodo.filter((todo) =>
+        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
     openTodo() {
       return this.todo.filter(
         (todo) => !todo.status && todo.categoryId === this.categoryId
@@ -71,6 +84,7 @@ export default {
 };
 </script>
 
+
 <template>
   <div class="body">
     <div class="title">
@@ -79,7 +93,11 @@ export default {
     </div>
 
     <div class="searchbar">
-      <input type="text" placeholder="Suche nach Aufgaben" />
+      <input
+        type="text"
+        placeholder="Suche nach Aufgaben"
+        v-model="searchQuery"
+      />
     </div>
 
     <br />
