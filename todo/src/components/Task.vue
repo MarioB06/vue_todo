@@ -74,6 +74,9 @@ export default {
         this.newTask = "";
       }
     },
+    goBack() {
+        this.$router.go(-1)
+      },
     toggleOpenTasks() {
       this.showOpenTasks = !this.showOpenTasks;
     },
@@ -91,6 +94,13 @@ export default {
       <h1>TO DO</h1>
       <h2>{{ category }}</h2>
     </div>
+
+    <div>
+  <button @click="goBack" class="btn btn-" style="background-color: #3e3e3e; color: white;"> &lt; Zurück </button>
+</div>
+
+    <br />
+    <br />
 
     <div class="searchbar">
       <input
