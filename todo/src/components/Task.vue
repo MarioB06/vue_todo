@@ -129,7 +129,7 @@ export default {
     <div class="add-task-bar">
       <input
         type="text"
-        placeholder="Neue Aufgabe hinzufügen"
+        placeholder="+ Neue Aufgabe hinzufügen"
         class="add-task-input"
         v-model="newTask"
         @keyup.enter="addTask"
@@ -193,6 +193,11 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   border-radius: 10px;
+  color: #7062d5;
+}
+.add-task-input:focus {
+  outline: none;
+  color: #7062d5;
 }
 
 .add-task-input {
@@ -203,6 +208,10 @@ export default {
   color: #7062d5;
   padding-left: 10px;
   border-radius: 10px;
+}
+
+.add-task-input::placeholder {
+  color: #7062d5;
 }
 
 .title {
