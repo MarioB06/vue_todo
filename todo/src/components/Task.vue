@@ -106,13 +106,13 @@ export default {
     <br />
     <br />
 
-    <div class="searchbar">
+    <!-- <div class="searchbar">
       <input
         type="text"
         placeholder="Suche nach Aufgaben"
         v-model="searchQuery"
       />
-    </div>
+    </div> -->
 
     <br />
     <br />
