@@ -7,7 +7,6 @@ export default {
       categoryId: null,
       showOpenTasks: true,
       showDoneTasks: true,
-      searchQuery: "", // Neues Datenattribut für die Suchanfrage
     };
   },
   mounted() {
@@ -27,18 +26,6 @@ export default {
     doneTodo() {
       return this.todo.filter(
         (todo) => todo.status && todo.categoryId === this.categoryId
-      );
-    },
-    // Filtern der offenen Aufgaben basierend auf der Suchabfrage
-    filteredOpenTodo() {
-      return this.openTodo.filter((todo) =>
-        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    // Filtern der erledigten Aufgaben basierend auf der Suchabfrage
-    filteredDoneTodo() {
-      return this.doneTodo.filter((todo) =>
-        todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
@@ -84,7 +71,6 @@ export default {
 };
 </script>
 
-
 <template>
   <div class="body">
     <div class="title">
@@ -93,7 +79,7 @@ export default {
     </div>
 
     <div class="searchbar">
-      <input class="search-input" type="text" placeholder="Suche nach Aufgaben" v-model="searchQuery" />
+      <input type="text" placeholder="Suche nach Aufgaben" />
     </div>
 
     <br />
@@ -154,9 +140,6 @@ export default {
 
 
 <style scoped>
-.search-input {
-  background-color: #3e3e3e;
-}
 .arrow-icon {
   margin-left: 5px;
   background-color: #3e3e3e;
@@ -246,7 +229,7 @@ export default {
   flex-direction: column;
 }
 
-
+.open-task-box,
 .done-task-box {
   width: 100%;
   height: 50px;
@@ -260,5 +243,10 @@ export default {
   margin-bottom: 2px;
 }
 
-
+p {
+  background-color: #3e3e3e;
+  color: #7062d5;
+  margin: 0;
+  padding-left: 10px;
+}
 </style>
