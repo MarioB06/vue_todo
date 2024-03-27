@@ -1,78 +1,106 @@
 <script>
-import { useCategoryStore } from '@/stores/category';
-
 export default {
-  name: 'CategoryList',
+  name: "CategoryList",
 
   data() {
     return {
-      newCategoryName: ""
-    }
+      newCategoryName: "",
+      categories: [],
+    };
+  },
+
+  mounted() {
+    const storedCategories =
+      JSON.parse(localStorage.getItem("categories")) || [];
+    this.categories = storedCategories;
   },
 
   computed: {
     category() {
-      return useCategoryStore().category; // Zugriff auf die Kategorie-Store-Eigenschaft
-    }
+      return this.categories;
+    },
   },
 
   methods: {
     addNewCategory() {
-      if (this.newCategoryName.trim() === '') return;
-      useCategoryStore().addCategory(this.newCategoryName); // Verwendung der Aktion des Kategorie-Stores
-      this.saveCategoriesToLocalStorage();
-      this.newCategoryName = ''; // Clear the input field after adding the category
+      const categoryName = this.newCategoryName.trim();
+      if (categoryName === "") return;
+
+      const newCategory = {
+        id: Date.now(),
+        name: categoryName,
+      };
+
+      this.categories.push(newCategory);
+      localStorage.setItem("categories", JSON.stringify(this.categories));
+
+      this.newCategoryName = "";
     },
-    saveCategoriesToLocalStorage() {
-      localStorage.setItem('categories', JSON.stringify(this.category));
+    deleteCategory(categoryId) {
+      this.categories = this.categories.filter(
+        (category) => category.id !== categoryId
+      );
+      localStorage.setItem("categories", JSON.stringify(this.categories));
     },
-  }
-}
+  },
+};
 </script>
 
 
 
 
 <template>
-  
   <div class="home">
-    
     <div class="category-sidebar">
       <div class="category-container">
-        
         <h2 class="category-title">Deine Kategorien</h2>
-        <router-link :to="'/task/' + category.id" v-for="category in category" :key="category.id" class="category-box">
-          {{ category.name }}
-        </router-link>
+        <div
+          v-for="categoryItem in category"
+          :key="categoryItem.id"
+          class="d-flex justify-content-between align-items-center category-box"
+        >
+        <router-link :to="'/task/' + categoryItem.id" class="category-link">{{ categoryItem.name }}</router-link>
+        <button @click="deleteCategory(categoryItem.id)" class="delete-button">&#10006; Delete</button>
+
+        </div>
       </div>
     </div>
     <div class="title">
       <h2>Willkommen bei Deiner ToDo-Liste!</h2>
-        <p>Organisiere dein Leben, erledige Aufgaben und bleibe produktiv.</p>
-         <p>Fange jetzt an, deine Aufgaben zu verwalten und dein Leben zu organisieren.</p>
+      <p>Organisiere dein Leben, erledige Aufgaben und bleibe produktiv.</p>
+      <p>
+        Fange jetzt an, deine Aufgaben zu verwalten und dein Leben zu
+        organisieren.
+      </p>
     </div>
-
     <div class="add-category-bar">
-      <input type="text" v-model="newCategoryName" placeholder="+ Kategorie hinzufügen" class="add-category-input" @keyup.enter="addNewCategory">
+      <input
+        type="text"
+        v-model="newCategoryName"
+        placeholder="+ Kategorie hinzufügen"
+        class="add-category-input"
+        @keyup.enter="addNewCategory"
+      />
     </div>
   </div>
 </template>
 
+
+
 <style scoped>
-.title{
+.title {
   margin-left: 100px;
   text-align: center;
-  padding: 30px; /* Innenabstand */
-  border-radius: 10px; /* Abrundung der Ecken */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schatten */
-  max-width: 600px; /* Maximale Breite */
-  margin: 50px auto; /* Zentrierte Ausrichtung */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px #7062d5;
+  max-width: 600px;
+  margin: 50px auto;
 }
 .home {
   display: flex;
   height: 100vh;
 }
-
 .category-sidebar {
   background-color: rgb(136, 134, 134);
   padding: 10px;
@@ -81,25 +109,45 @@ export default {
   max-height: 100%;
   overflow-y: auto;
 }
-
 .category-container {
   display: flex;
   flex-direction: column;
   background-color: rgb(136, 134, 134);
 }
-
 .category-box {
-  background-color: #3e3e3e;
-  color: white;
+  color: #7062d5;
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
-  text-decoration: none;
+  cursor: pointer;
 }
 
-.content {
-  flex: 1;
-  padding: 20px;
+.category-title {
+  margin-top: 0;
+  color: #333;
+  background-color: rgb(136, 134, 134);
+}
+.category-link {
+  text-decoration: none;
+  color: white;
+}
+
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #7062d5;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+}
+
+.category-box:hover .delete-button {
+  display: inline-block;
+}
+
+.delete-button:hover {
+  display: inline-block;
 }
 
 
@@ -111,9 +159,7 @@ export default {
   width: calc(100% - 40px);
   background-color: #3e3e3e;
   border-radius: 10%;
-
 }
-
 .add-category-input {
   width: 100%;
   height: 40px;
@@ -123,14 +169,7 @@ export default {
   padding-left: 10px;
   border-radius: 5px;
 }
-
 .add-category-input:focus {
   outline: none;
-}
-
-.category-title {
-  margin-top: 0;
-  color: #333; 
-  background-color: rgb(136, 134, 134);
 }
 </style>
