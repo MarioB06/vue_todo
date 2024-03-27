@@ -82,6 +82,7 @@ export default {
         placeholder="+ Kategorie hinzufügen"
         class="add-category-input"
         @keyup.enter="addNewCategory"
+        maxlength="15"
       />
     </div>
   </div>
@@ -131,7 +132,6 @@ export default {
   color: white;
 }
 
-
 .delete-button {
   background: none;
   border: none;
@@ -148,8 +148,6 @@ export default {
 .delete-button:hover {
   display: inline-block;
 }
-
-
 
 .add-category-bar {
   position: fixed;
