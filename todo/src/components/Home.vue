@@ -59,9 +59,15 @@ export default {
           :key="categoryItem.id"
           class="d-flex justify-content-between align-items-center category-box"
         >
-        <router-link :to="'/task/' + categoryItem.id" class="category-link">{{ categoryItem.name }}</router-link>
-        <button @click="deleteCategory(categoryItem.id)" class="delete-button">&#10006; Delete</button>
-
+          <router-link :to="'/task/' + categoryItem.id" class="category-link">{{
+            categoryItem.name
+          }}</router-link>
+          <button
+            @click="deleteCategory(categoryItem.id)"
+            class="delete-button"
+          >
+            &#10006; Delete
+          </button>
         </div>
       </div>
     </div>
@@ -80,6 +86,7 @@ export default {
         placeholder="+ Kategorie hinzufügen"
         class="add-category-input"
         @keyup.enter="addNewCategory"
+        maxlength="15"
       />
     </div>
   </div>
@@ -132,7 +139,6 @@ export default {
   color: white;
 }
 
-
 .delete-button {
   background: none;
   border: none;
@@ -149,8 +155,6 @@ export default {
 .delete-button:hover {
   display: inline-block;
 }
-
-
 
 .add-category-bar {
   position: fixed;
