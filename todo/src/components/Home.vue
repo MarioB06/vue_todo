@@ -42,6 +42,9 @@ export default {
       );
       localStorage.setItem("categories", JSON.stringify(this.categories));
     },
+    navigateToCategory(categoryId) {
+  
+    },
   },
 };
 </script>
@@ -59,9 +62,8 @@ export default {
           :key="categoryItem.id"
           class="d-flex justify-content-between align-items-center category-box"
         >
-        <router-link :to="'/task/' + categoryItem.id" class="category-link">{{ categoryItem.name }}</router-link>
-        <button @click="deleteCategory(categoryItem.id)" class="delete-button">&#10006; Delete</button>
-
+          <router-link :to="'/task/' + categoryItem.id" class="category-link">{{ categoryItem.name }}</router-link>
+          <button @click="deleteCategory(categoryItem.id)" class="delete-button">&#10006; Delete</button>
         </div>
       </div>
     </div>
@@ -84,9 +86,6 @@ export default {
     </div>
   </div>
 </template>
-
-
-
 <style scoped>
 .title {
   margin-left: 100px;

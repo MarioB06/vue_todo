@@ -7,7 +7,7 @@ export default {
       categoryId: null,
       showOpenTasks: true,
       showDoneTasks: true,
-      searchQuery: "", // Hier wird der Suchbegriff gespeichert
+      searchQuery: "", 
     };
   },
   mounted() {
@@ -19,13 +19,13 @@ export default {
     }
   },
   computed: {
-    // Hinzufügen einer neuen berechneten Eigenschaft für die gefilterten offenen Aufgaben
+    
     filteredOpenTodo() {
       return this.openTodo.filter((todo) =>
         todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
-    // Hinzufügen einer neuen berechneten Eigenschaft für die gefilterten erledigten Aufgaben
+    
     filteredDoneTodo() {
       return this.doneTodo.filter((todo) =>
         todo.description.toLowerCase().includes(this.searchQuery.toLowerCase())
@@ -56,6 +56,10 @@ export default {
     },
     saveTodo() {
       localStorage.setItem("todo", JSON.stringify(this.todo));
+    },
+    deleteTask(id) {
+      this.todo = this.todo.filter((task) => task.id !== id);
+      this.saveTodo();
     },
     addTask() {
       const taskText = this.newTask.trim();
@@ -96,8 +100,8 @@ export default {
     </div>
 
     <div>
-  <button @click="goBack" class="btn btn-" style="background-color: #3e3e3e; color: white;"> &lt; Zurück </button>
-</div>
+      <button @click="goBack" class="btn btn-" style="background-color: #3e3e3e; color: white;"> &lt; Zurück </button>
+    </div>
 
     <br />
     <br />
@@ -117,20 +121,19 @@ export default {
       <button class="open-task-box" @click="toggleOpenTasks" style="width: 20%">
         <p>
           Offen
-          <span class="arrow-icon" v-if="showOpenTasks" @click="toggleOpenTasks"
-            >▼</span
-          >
+          <span class="arrow-icon" v-if="showOpenTasks" @click="toggleOpenTasks">▼</span>
           <span class="arrow-icon" v-else @click="toggleOpenTasks">▲</span>
         </p>
       </button>
 
       <div class="tasks" v-if="showOpenTasks">
-        <div v-for="todo in openTodo" :key="todo.id" class="open-task-box">
+        <div v-for="todo in filteredOpenTodo" :key="todo.id" class="open-task-box">
           <span class="mark-done-icon" @click="markAsDone(todo.id)">
             <span class="circle" v-if="!todo.status"></span>
             <span class="checkmark" v-else></span>
           </span>
           <p>{{ todo.description }}</p>
+          <button @click="deleteTask(todo.id)" class="delete-task-button">&#10006; Löschen</button>
         </div>
       </div>
 
@@ -140,16 +143,15 @@ export default {
       <button class="done-task-box" @click="toggleDoneTasks" style="width: 20%">
         <p>
           Erledigt
-          <span class="arrow-icon" v-if="showDoneTasks" @click="toggleDoneTasks"
-            >▼</span
-          >
+          <span class="arrow-icon" v-if="showDoneTasks" @click="toggleDoneTasks">▼</span>
           <span class="arrow-icon" v-else @click="toggleDoneTasks">▲</span>
         </p>
       </button>
 
       <div class="tasks" v-if="showDoneTasks">
-        <div v-for="todo in doneTodo" :key="todo.id" class="done-task-box">
+        <div v-for="todo in filteredDoneTodo" :key="todo.id" class="done-task-box">
           <p>{{ todo.description }}</p>
+          <button @click="deleteTask(todo.id)" class="delete-task-button">&#10006; Löschen</button>
         </div>
       </div>
     </div>
@@ -166,7 +168,6 @@ export default {
   </div>
 </template>
 
-
 <style scoped>
 .arrow-icon {
   margin-left: 5px;
@@ -176,6 +177,7 @@ export default {
 .arrow-rotated {
   transform: rotate(180deg);
 }
+
 .mark-done-icon {
   cursor: pointer;
   display: inline-block;
@@ -210,6 +212,24 @@ export default {
 
 .mark-done-icon:hover .checkmark {
   display: block;
+}
+
+.delete-task-button {
+  background: none;
+  border: none;
+  color: #7062d5;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  margin-left: 10px;
+}
+
+.open-task-box:hover .delete-task-button {
+  display: inline-block;
+}
+
+.done-task-box:hover .delete-task-button {
+  display: inline-block;
 }
 
 .add-task-bar {
@@ -285,5 +305,10 @@ p {
   color: #7062d5;
   margin: 0;
   padding-left: 10px;
+}
+
+.delete-task-button:hover {
+  display: inline-block;
+  color: #ff4b5c; /* Change color on hover */
 }
 </style>
