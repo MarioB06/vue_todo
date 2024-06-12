@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
   name: "CategoryList",
 
@@ -6,13 +8,13 @@ export default {
     return {
       newCategoryName: "",
       categories: [],
+      apiUrl: "https://295.berufsbildung-test.ch/2024/gruppe-luan-mario/public/api/v1/category",
+      apiKey: "1bb11dde432db87cde406dddb283313b",
     };
   },
 
   mounted() {
-    const storedCategories =
-      JSON.parse(localStorage.getItem("categories")) || [];
-    this.categories = storedCategories;
+    this.loadCategories();
   },
 
   computed: {
@@ -22,35 +24,63 @@ export default {
   },
 
   methods: {
-    addNewCategory() {
+    async loadCategories() {
+      try {
+        const response = await axios.get(this.apiUrl, {
+          headers: {
+            'X-API-KEY': this.apiKey,
+          },
+        });
+        console.log("API response:", response.data); // Debugging-Ausgabe
+        this.categories = response.data;
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    },
+
+    async addNewCategory() {
       const categoryName = this.newCategoryName.trim();
       if (categoryName === "") return;
 
       const newCategory = {
-        id: Date.now(),
         name: categoryName,
       };
 
-      this.categories.push(newCategory);
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+      try {
+        const response = await axios.post(this.apiUrl, newCategory, {
+          headers: {
+            'X-API-KEY': this.apiKey,
+          },
+        });
+        this.categories.push(response.data);
+      } catch (error) {
+        console.error("Error adding category:", error);
+      }
 
       this.newCategoryName = "";
     },
-    deleteCategory(categoryId) {
-      this.categories = this.categories.filter(
-        (category) => category.id !== categoryId
-      );
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+
+    async deleteCategory(categoryId) {
+      try {
+        await axios.delete(`${this.apiUrl}/${categoryId}`, {
+          headers: {
+            'X-API-KEY': this.apiKey,
+          },
+        });
+        this.categories = this.categories.filter(
+          (category) => category.id !== categoryId
+        );
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      }
     },
+
     navigateToCategory(categoryId) {
-  
+      // Navigation logic here
     },
   },
 };
 </script>
-
-
-
 
 <template>
   <div class="home">
@@ -87,6 +117,7 @@ export default {
     </div>
   </div>
 </template>
+
 <style scoped>
 .title {
   margin-left: 100px;
